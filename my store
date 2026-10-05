@@ -1,0 +1,521 @@
+
+"use client";
+
+import { useState } from "react";
+
+/*
+============================================================
+                    YOUR STORE SETTINGS
+============================================================
+
+CHANGE THESE VALUES TO CUSTOMIZE YOUR STORE.
+
+IMPORTANT:
+Your Stripe Payment Links come from Stripe.
+
+Example:
+https://buy.stripe.com/xxxxxxxxxxxxxxxx
+
+You create the Payment Link in Stripe, then paste it
+into the "stripeLink" field for each product.
+============================================================
+*/
+
+const STORE_NAME = "MY STORE";
+
+const STORE_DESCRIPTION =
+  "Premium products. Simple checkout. Secure payments.";
+
+
+/*
+============================================================
+                    YOUR PRODUCTS
+============================================================
+
+ADD / REMOVE PRODUCTS HERE.
+
+Each product needs:
+
+name
+price
+description
+image
+stripeLink
+
+IMAGE:
+Put your image inside:
+
+public/products/
+
+Example:
+
+public/products/shirt.jpg
+
+Then use:
+
+"/products/shirt.jpg"
+
+STRIPE LINK:
+Paste the Payment Link you create in Stripe.
+
+============================================================
+*/
+
+const products = [
+  {
+    id: 1,
+
+    name: "Product One",
+
+    price: 20,
+
+    description:
+      "This is my first product. Replace this description with your own.",
+
+    image: "/products/product1.jpg",
+
+    // ======================================================
+    // PUT YOUR STRIPE PAYMENT LINK HERE
+    // ======================================================
+
+    stripeLink:
+      "https://buy.stripe.com/YOUR_PAYMENT_LINK_HERE",
+  },
+
+  {
+    id: 2,
+
+    name: "Product Two",
+
+    price: 50,
+
+    description:
+      "This is another product. Replace this with your own description.",
+
+    image: "/products/product2.jpg",
+
+    // ======================================================
+    // PUT YOUR SECOND STRIPE PAYMENT LINK HERE
+    // ======================================================
+
+    stripeLink:
+      "https://buy.stripe.com/YOUR_PAYMENT_LINK_HERE",
+  },
+
+  {
+    id: 3,
+
+    name: "Product Three",
+
+    price: 100,
+
+    description:
+      "Your premium product goes here.",
+
+    image: "/products/product3.jpg",
+
+    // ======================================================
+    // PUT YOUR THIRD STRIPE PAYMENT LINK HERE
+    // ======================================================
+
+    stripeLink:
+      "https://buy.stripe.com/YOUR_PAYMENT_LINK_HERE",
+  },
+];
+
+
+/*
+============================================================
+                    WEBSITE
+============================================================
+*/
+
+export default function Store() {
+
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const [selectedProduct, setSelectedProduct] =
+    useState<number | null>(null);
+
+
+  /*
+  ==========================================================
+                      BUY PRODUCT
+  ==========================================================
+
+  This does NOT process the customer's card itself.
+
+  Instead:
+
+  Website
+      ↓
+  Stripe Payment Link
+      ↓
+  Stripe Checkout
+      ↓
+  Customer pays
+
+  Stripe handles the sensitive payment information.
+  */
+
+  function buyProduct(stripeLink: string, productId: number) {
+
+    setSelectedProduct(productId);
+
+    // Send customer to Stripe
+    window.location.href = stripeLink;
+  }
+
+
+  return (
+    <main className="min-h-screen bg-[#080808] text-white">
+
+
+      {/* ==================================================
+                          NAVBAR
+      ================================================== */}
+
+      <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#080808]/90 backdrop-blur-xl">
+
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+
+          {/* STORE NAME */}
+
+          <button
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              })
+            }
+            className="text-xl font-black tracking-tight"
+          >
+            {STORE_NAME}
+          </button>
+
+
+          {/* DESKTOP NAV */}
+
+          <div className="hidden items-center gap-8 md:flex">
+
+            <a
+              href="#products"
+              className="text-sm text-white/60 transition hover:text-white"
+            >
+              Products
+            </a>
+
+            <a
+              href="#about"
+              className="text-sm text-white/60 transition hover:text-white"
+            >
+              About
+            </a>
+
+            <a
+              href="#contact"
+              className="text-sm text-white/60 transition hover:text-white"
+            >
+              Contact
+            </a>
+
+          </div>
+
+
+          {/* MOBILE MENU BUTTON */}
+
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="rounded-full border border-white/10 px-4 py-2 text-sm md:hidden"
+          >
+            Menu
+          </button>
+
+        </div>
+
+
+        {/* MOBILE MENU */}
+
+        {menuOpen && (
+
+          <div className="border-t border-white/10 px-6 py-5 md:hidden">
+
+            <div className="flex flex-col gap-5">
+
+              <a
+                href="#products"
+                onClick={() => setMenuOpen(false)}
+              >
+                Products
+              </a>
+
+              <a
+                href="#about"
+                onClick={() => setMenuOpen(false)}
+              >
+                About
+              </a>
+
+              <a
+                href="#contact"
+                onClick={() => setMenuOpen(false)}
+              >
+                Contact
+              </a>
+
+            </div>
+
+          </div>
+
+        )}
+
+      </nav>
+
+
+
+      {/* ==================================================
+                          HERO
+      ================================================== */}
+
+      <section className="relative overflow-hidden">
+
+        {/* Background glow */}
+
+        <div className="pointer-events-none absolute left-1/2 top-20 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-white/[0.04] blur-3xl" />
+
+
+        <div className="relative mx-auto max-w-7xl px-6 py-32 md:py-44">
+
+          <div className="max-w-4xl">
+
+            <p className="mb-6 text-sm font-semibold uppercase tracking-[0.35em] text-white/40">
+              Welcome
+            </p>
+
+
+            <h1 className="text-6xl font-black tracking-[-0.05em] md:text-8xl">
+              {STORE_NAME}
+            </h1>
+
+
+            <p className="mt-8 max-w-2xl text-lg leading-8 text-white/50 md:text-xl">
+              {STORE_DESCRIPTION}
+            </p>
+
+
+            <a
+              href="#products"
+              className="mt-10 inline-flex rounded-full bg-white px-8 py-4 font-bold text-black transition duration-300 hover:scale-105"
+            >
+              Shop Now
+            </a>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      {/* ==================================================
+                        PRODUCTS
+      ================================================== */}
+
+      <section
+        id="products"
+        className="mx-auto max-w-7xl px-6 py-24"
+      >
+
+        <div className="mb-12">
+
+          <p className="text-sm uppercase tracking-[0.3em] text-white/40">
+            Shop
+          </p>
+
+          <h2 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">
+            Our Products
+          </h2>
+
+        </div>
+
+
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+
+          {products.map((product) => (
+
+            <article
+              key={product.id}
+              className="group overflow-hidden rounded-3xl border border-white/10 bg-white/[0.035] transition duration-500 hover:-translate-y-2 hover:border-white/20"
+            >
+
+
+              {/* PRODUCT IMAGE */}
+
+              <div className="relative aspect-square overflow-hidden bg-white/5">
+
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                />
+
+              </div>
+
+
+
+              {/* PRODUCT INFORMATION */}
+
+              <div className="p-7">
+
+                <div className="flex items-start justify-between gap-4">
+
+                  <h3 className="text-2xl font-bold">
+                    {product.name}
+                  </h3>
+
+
+                  <span className="whitespace-nowrap text-xl font-bold">
+                    ${product.price.toFixed(2)}
+                  </span>
+
+                </div>
+
+
+                <p className="mt-4 min-h-[48px] text-sm leading-6 text-white/50">
+                  {product.description}
+                </p>
+
+
+                {/* BUY BUTTON */}
+
+                <button
+                  onClick={() =>
+                    buyProduct(
+                      product.stripeLink,
+                      product.id
+                    )
+                  }
+
+                  disabled={selectedProduct === product.id}
+
+                  className="mt-7 w-full rounded-full bg-white px-6 py-4 font-bold text-black transition duration-300 hover:scale-[1.02] hover:bg-white/90 disabled:cursor-wait disabled:opacity-60"
+                >
+
+                  {selectedProduct === product.id
+                    ? "Opening Checkout..."
+                    : "Buy Now"}
+
+                </button>
+
+              </div>
+
+            </article>
+
+          ))}
+
+        </div>
+
+      </section>
+
+
+
+      {/* ==================================================
+                          ABOUT
+      ================================================== */}
+
+      <section
+        id="about"
+        className="border-y border-white/10"
+      >
+
+        <div className="mx-auto max-w-7xl px-6 py-28">
+
+          <div className="max-w-3xl">
+
+            <p className="text-sm uppercase tracking-[0.3em] text-white/40">
+              About
+            </p>
+
+            <h2 className="mt-4 text-4xl font-black tracking-tight md:text-5xl">
+              Built for your customers.
+            </h2>
+
+            <p className="mt-7 text-lg leading-8 text-white/50">
+              Replace this text with information about your
+              business, products, brand, or anything else you
+              want your customers to know.
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      {/* ==================================================
+                         CONTACT
+      ================================================== */}
+
+      <section
+        id="contact"
+        className="mx-auto max-w-7xl px-6 py-24"
+      >
+
+        <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-10 md:p-16">
+
+          <p className="text-sm uppercase tracking-[0.3em] text-white/40">
+            Contact
+          </p>
+
+          <h2 className="mt-4 text-4xl font-black">
+            Have a question?
+          </h2>
+
+          <p className="mt-5 text-white/50">
+            Email us and we'll get back to you.
+          </p>
+
+
+          {/* =================================================
+              CHANGE THIS EMAIL
+              ================================================= */}
+
+          <a
+            href="mailto:YOUR_EMAIL@example.com"
+            className="mt-8 inline-block rounded-full bg-white px-7 py-4 font-bold text-black transition hover:scale-105"
+          >
+            Contact Us
+          </a>
+
+        </div>
+
+      </section>
+
+
+
+      {/* ==================================================
+                          FOOTER
+      ================================================== */}
+
+      <footer className="border-t border-white/10">
+
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-10 text-sm text-white/40 md:flex-row md:items-center md:justify-between">
+
+          <p>
+            © 2026 {STORE_NAME}
+          </p>
+
+          <p>
+            Secure checkout powered by Stripe
+          </p>
+
+        </div>
+
+      </footer>
+
+    </main>
+  );
+}
